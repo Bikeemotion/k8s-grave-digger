@@ -1,0 +1,63 @@
+{
+  "kind": "ReplicationController",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "gravedigger-1.0-minikube",
+    "namespace": "default",
+    "labels": {
+      "name": "gravedigger",
+      "version": "1.0-minikube"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "selector": {
+      "name": "gravedigger",
+      "version": "1.0-minikube"
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "name": "gravedigger",
+          "version": "1.0-minikube"
+        }
+      },
+      "spec": {      
+        "containers": [
+          {            
+            "name": "gravedigger",
+            "image": "minikube/minikube/gravedigger:1.0-minikube",
+            "ports": [],
+            "imagePullPolicy": "Never",
+            "env": [
+              {
+                "name": "MONITORED_POD_NAME",
+                "value": "monolithic-app"
+              },
+              {
+                "name": "POD_HEALTH_CHECK_PATH",
+                "value": "monitored/pods/health/GET/addr"
+              },
+              {
+                "name": "POD_HEALTH_UPDATE_PATH",
+                "value": "monitored/pods/health/POST/addr"
+              },
+              {
+                "name": "POD_HEALTH_PORT",
+                "value": "9999"
+              },
+              {
+                "name": "TIMEOUT_SECONDS",
+                "value": "30"
+              },
+              {
+                "name": "PERIOD_SECONDS",
+                "value": "10"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
