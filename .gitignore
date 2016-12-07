@@ -1,0 +1,10 @@
+#Temp Files
+*~
+*.swp
+*temp
+**/*_deploy
+**/*_deploy.json
+/other-files/bootstrapper/target/
+/other-files/bootstrapper/.*
+.idea
+*.iml
