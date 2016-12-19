@@ -19,7 +19,7 @@
         <maven-dependency-plugin.version>2.10</maven-dependency-plugin.version>
         <jodatime.version>2.5</jodatime.version>
         <http.client.version>4.5.2</http.client.version>
-        <be.kubernetes-framework.version>1.0.5-SNAPSHOT</be.kubernetes-framework.version>
+        <be.kubernetes-framework.version>1.0.6</be.kubernetes-framework.version>
     </properties>
 
 
