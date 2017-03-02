@@ -560,9 +560,9 @@ public class PodStateSetTest {
       PodStateSet lastStates,
       Set<PodState> saved,
       PodState victim,
-      PodStateSet expectedUpsertedStates) {
+      Set<PodState> expectedUpsertedStates) {
 
-    PodStateSet upsertedPodStates = lastStates.upsert(saved, victim);
+    Set<PodState> upsertedPodStates = lastStates.upsert(saved, victim);
     assertEquals(upsertedPodStates.toString(), expectedUpsertedStates.toString());
   }
 
@@ -606,7 +606,7 @@ public class PodStateSetTest {
                 .setHost("0.0.0.1")
                 .setTimeStamp(new DateTime(1999, 1, 1, 15, 36).getMillis()),
 
-            new PodStateSet(
+            new HashSet(
                 asList(
                     new PodState()
                         .setHealth(PodState.Status.HEALTHY)
@@ -652,7 +652,7 @@ public class PodStateSetTest {
 
             null,
 
-            new PodStateSet(
+            new HashSet(
                 asList(
                     new PodState()
                         .setHealth(PodState.Status.HEALTHY)
@@ -703,18 +703,13 @@ public class PodStateSetTest {
                 .setHost("0.0.0.0")
                 .setTimeStamp(new DateTime(1999, 1, 1, 15, 35).getMillis()),
 
-            new PodStateSet(
+            new HashSet(
                 asList(
-                    new PodState()
-                        .setHealth(PodState.Status.SICK)
-                        .setContainerID("0.0.0.0")
-                        .setHost("0.0.0.0")
-                        .setTimeStamp(new DateTime(1999, 1, 1, 15, 35).getMillis()),
-                    new PodState()
-                        .setHealth(PodState.Status.HEALTHY)
-                        .setContainerID("0.0.0.1")
-                        .setHost("0.0.0.1")
-                        .setTimeStamp(new DateTime(1999, 1, 1, 15, 31).getMillis()))
+                new PodState()
+                    .setHealth(PodState.Status.SICK)
+                    .setContainerID("0.0.0.0")
+                    .setHost("0.0.0.0")
+                    .setTimeStamp(new DateTime(1999, 1, 1, 15, 35).getMillis()))
             )
         },
 
@@ -750,19 +745,7 @@ public class PodStateSetTest {
 
             null,
 
-            new PodStateSet(
-                asList(
-                    new PodState()
-                        .setHealth(PodState.Status.SICK)
-                        .setContainerID("0.0.0.0")
-                        .setHost("0.0.0.0")
-                        .setTimeStamp(new DateTime(1999, 1, 1, 15, 30).getMillis()),
-                    new PodState()
-                        .setHealth(PodState.Status.SICK)
-                        .setContainerID("0.0.0.1")
-                        .setHost("0.0.0.1")
-                        .setTimeStamp(new DateTime(1999, 1, 1, 15, 31).getMillis()))
-            )
+            new HashSet()
         },
 
         // updating NOK elements to OK
@@ -797,18 +780,13 @@ public class PodStateSetTest {
 
             null,
 
-            new PodStateSet(
+            new HashSet(
                 asList(
-                    new PodState()
-                        .setHealth(PodState.Status.HEALTHY)
-                        .setContainerID("0.0.0.0")
-                        .setHost("0.0.0.0")
-                        .setTimeStamp(new DateTime(1999, 1, 1, 15, 35).getMillis()),
-                    new PodState()
-                        .setHealth(PodState.Status.SICK)
-                        .setContainerID("0.0.0.1")
-                        .setHost("0.0.0.1")
-                        .setTimeStamp(new DateTime(1999, 1, 1, 15, 31).getMillis()))
+                new PodState()
+                    .setHealth(PodState.Status.HEALTHY)
+                    .setContainerID("0.0.0.0")
+                    .setHost("0.0.0.0")
+                    .setTimeStamp(new DateTime(1999, 1, 1, 15, 35).getMillis()))
             )
         },
 
@@ -844,19 +822,7 @@ public class PodStateSetTest {
 
             null,
 
-            new PodStateSet(
-                asList(
-                    new PodState()
-                        .setHealth(PodState.Status.HEALTHY)
-                        .setContainerID("0.0.0.0")
-                        .setHost("0.0.0.0")
-                        .setTimeStamp(new DateTime(1999, 1, 1, 15, 30).getMillis()),
-                    new PodState()
-                        .setHealth(PodState.Status.HEALTHY)
-                        .setContainerID("0.0.0.1")
-                        .setHost("0.0.0.1")
-                        .setTimeStamp(new DateTime(1999, 1, 1, 15, 31).getMillis()))
-            )
+            new HashSet()
         },
 
         // update pod that has the same IP but not the same container ID
@@ -883,23 +849,12 @@ public class PodStateSetTest {
                 .setHost("0.0.0.1")
                 .setTimeStamp(new DateTime(1999, 1, 1, 15, 36).getMillis()),
 
-            new PodStateSet(
-                asList(
-                    new PodState()
-                        .setHealth(PodState.Status.HEALTHY)
-                        .setContainerID("c1")
-                        .setHost("0.0.0.0")
-                        .setTimeStamp(new DateTime(1999, 1, 1, 15, 35).getMillis()),
-                    new PodState()
-                        .setHealth(PodState.Status.HEALTHY)
-                        .setContainerID("c2")
-                        .setHost("0.0.0.1")
-                        .setTimeStamp(new DateTime(1999, 1, 1, 15, 36).getMillis()),
-                    new PodState()
-                        .setHealth(PodState.Status.SICK)
-                        .setContainerID("c3")
-                        .setHost("0.0.0.1")
-                        .setTimeStamp(new DateTime(1999, 1, 1, 15, 37).getMillis()))
+            new HashSet(
+                asList(new PodState()
+                    .setHealth(PodState.Status.SICK)
+                    .setContainerID("c3")
+                    .setHost("0.0.0.1")
+                    .setTimeStamp(new DateTime(1999, 1, 1, 15, 37).getMillis()))
             )
         }
     };
