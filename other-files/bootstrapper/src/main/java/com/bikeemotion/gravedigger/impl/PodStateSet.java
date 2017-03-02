@@ -102,7 +102,9 @@ public class PodStateSet extends HashSet<PodState> {
    * Updates current known pods with OK and the poisoned vitim<br/>
    * A NOK pod or victim will not be upserted if the poisoning was successful<br/>
    */
-  public PodStateSet upsert(Set<PodState> saved, PodState killed) {
+  public Set<PodState> upsert(Set<PodState> saved, PodState killed) {
+
+    Set<PodState> upserted = new HashSet<>();
 
     // healthy pod states should all be updated
     if (saved != null) {
@@ -115,6 +117,8 @@ public class PodStateSet extends HashSet<PodState> {
       // need to remove old entries because a Set does not update existing elements
       removeAll(healthyPodStates);
       addAll(healthyPodStates);
+
+      upserted.addAll(healthyPodStates);
     }
 
     // killed pod should also be updated
@@ -122,9 +126,10 @@ public class PodStateSet extends HashSet<PodState> {
 
       removeIf(l -> l.equals(killed));
       add(killed);
+      upserted.add(killed);
     }
 
-    return this;
+    return upserted;
   }
 
   @Override

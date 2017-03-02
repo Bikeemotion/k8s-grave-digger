@@ -1,6 +1,5 @@
 package com.bikeemotion.gravedigger.impl;
 
-import com.bikeemotion.kubernetes.Pod;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -51,22 +50,22 @@ public class PodComm {
     this.port = port;
   }
 
-  PodState query(Pod currentPod) {
+  PodState query(final String podIP, final String podContainerID) {
 
     HttpGet request = new HttpGet(String.format(
         "http://%s:%s/%s",
-        currentPod.getIP(),
+        podIP,
         port,
         healthCheckAddress));
     request.addHeader("accept", "application/json");
 
     boolean healthy = false;
-    log.debug("Querying pod [{}]...", currentPod.getIP());
+    log.debug("Querying pod [{}]...", podIP);
     try (CloseableHttpResponse response = httpClient.execute(request, httpContext)) {
 
       log.debug(
           "Pod [{}] answered with [{}]...",
-          currentPod.getIP(),
+          podIP,
           response);
       healthy = response.getStatusLine().getStatusCode() == 204;
 
@@ -74,14 +73,14 @@ public class PodComm {
 
       log.warn(String.format(
           "Unable to query pod [%s] or parse its response  - may not be fully started yet or just sick...",
-          currentPod.getIP()));
+          podIP));
     }
 
     return new PodState()
         .setTimeStamp(now(UTC).getMillis())
         .setHealth(healthy ? HEALTHY : PodState.Status.SICK)
-        .setHost(currentPod.getIP())
-        .setContainerID(currentPod.getContainerID());
+        .setHost(podIP)
+        .setContainerID(podContainerID);
   }
 
   boolean poison(PodState victim) {

@@ -19,7 +19,7 @@
         <maven-dependency-plugin.version>2.10</maven-dependency-plugin.version>
         <jodatime.version>2.5</jodatime.version>
         <http.client.version>4.5.2</http.client.version>
-        <be.kubernetes-framework.version>1.0.6</be.kubernetes-framework.version>
+        <kubernetes-client.version>1.4.14</kubernetes-client.version>
     </properties>
 
 
@@ -30,14 +30,6 @@
             <artifactId>slf4j-log4j12</artifactId>
             <scope>compile</scope>
         </dependency>
-
-        <dependency>
-            <groupId>com.bikeemotion</groupId>
-            <artifactId>kubernetes-framework</artifactId>
-            <version>${be.kubernetes-framework.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
@@ -49,12 +41,16 @@
             <artifactId>httpclient</artifactId>
             <version>${http.client.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${testng.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>kubernetes-client</artifactId>
+            <version>${kubernetes-client.version}</version>
         </dependency>
 
     </dependencies>

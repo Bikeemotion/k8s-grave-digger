@@ -9,12 +9,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static com.bikeemotion.kubernetes.KubernetesDao.getEnvOrDefault;
-
 public class Main {
 
   private static final Logger log = LoggerFactory.getLogger(Main.class);
-  private static final String MONITORED_POD_NAME = getEnvOrDefault("MONITORED_POD_NAME", null);
+  private static final String MONITORED_POD_LABEL_KEY = getEnvOrDefault("MONITORED_POD_LABEL_KEY", null);
+  private static final String MONITORED_POD_LABEL_VALUE = getEnvOrDefault("MONITORED_POD_LABEL_VALUE", null);
   private static final String POD_HEALTH_CHECK_PATH = getEnvOrDefault("POD_HEALTH_CHECK_PATH", null);
   private static final String POD_HEALTH_UPDATE_PATH = getEnvOrDefault("POD_HEALTH_UPDATE_PATH", null);
   private static final String POD_HEALTH_PORT = getEnvOrDefault("POD_HEALTH_PORT", null);
@@ -23,7 +22,8 @@ public class Main {
 
   public static void main(String[] args) {
 
-    assert MONITORED_POD_NAME != null;
+    assert MONITORED_POD_LABEL_KEY != null;
+    assert MONITORED_POD_LABEL_VALUE != null;
     assert POD_HEALTH_CHECK_PATH != null;
     assert POD_HEALTH_UPDATE_PATH != null;
     assert POD_HEALTH_PORT != null;
@@ -37,7 +37,8 @@ public class Main {
     try {
 
       log.info("Starting Kubernetes GraveDigger...");
-      log.info("MONITORED_POD_NAME [{}]", MONITORED_POD_NAME);
+      log.info("MONITORED_POD_LABEL_KEY [{}]", MONITORED_POD_LABEL_KEY);
+      log.info("MONITORED_POD_LABEL_VALUE [{}]", MONITORED_POD_LABEL_VALUE);
       log.info("POD_HEALTH_CHECK_PATH [{}]", POD_HEALTH_CHECK_PATH);
       log.info("POD_HEALTH_UPDATE_PATH [{}]", POD_HEALTH_UPDATE_PATH);
       log.info("POD_HEALTH_PORT [{}]", POD_HEALTH_PORT);
@@ -56,7 +57,8 @@ public class Main {
     scheduledPool = Executors.newScheduledThreadPool(1);
     scheduledPool.scheduleWithFixedDelay(
         new Worker(
-            MONITORED_POD_NAME,
+            MONITORED_POD_LABEL_KEY,
+            MONITORED_POD_LABEL_VALUE,
             new PodComm(
                 POD_HEALTH_CHECK_PATH,
                 POD_HEALTH_UPDATE_PATH,
@@ -67,5 +69,13 @@ public class Main {
         TimeUnit.MILLISECONDS);
 
     Runtime.getRuntime().addShutdownHook(new Thread(() -> scheduledPool.shutdown()));
+  }
+
+  public static String getEnvOrDefault(final String variableName, final String defaultValue) {
+
+    final String value = System.getenv(variableName);
+    return (value == null || value.isEmpty())
+        ? defaultValue
+        : value;
   }
 }
